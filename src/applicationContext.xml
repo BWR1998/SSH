@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans
+	http://www.springframework.org/schema/beans/spring-beans.xsd
+	http://www.springframework.org/schema/context
+	http://www.springframework.org/schema/context/spring-context.xsd
+	http://www.springframework.org/schema/aop 
+    http://www.springframework.org/schema/aop/spring-aop-4.0.xsd
+    http://www.springframework.org/schema/tx
+    http://www.springframework.org/schema/tx/spring-tx.xsd">
+    
+	<context:property-placeholder location="classpath:jdbc.properties"/>
+	<tx:annotation-driven transaction-manager="transactionManager"/>
+	
+	<bean id="dataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource">
+		<property name="driverClass" value="${jdbc.driverClass}"/>
+		<property name="jdbcUrl" value="${jdbc.url}"/>
+		<property name="user" value="${jdbc.username}"/>
+		<property name="password" value="${jdbc.password}"/>
+	</bean>
+    <bean id="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
+    	<property name="dataSource" ref="dataSource"/>
+    	<property name="mappingResources">
+    		<list>
+    			<value>entity/Clothes.hbm.xml</value>
+    			<value>entity/Users.hbm.xml</value>
+    			<value>entity/Outbounddetails.hbm.xml</value>
+    				<value>entity/Warehousedetails.hbm.xml</value>
+    		</list>
+    	</property>
+    	<property name="hibernateProperties">
+    		<props>
+    			<prop key="hibernate.dialect">org.hibernate.dialect.MySQLDialect</prop>
+    			<prop key="hibernate.show_sql">true</prop>
+    			<!-- 
+    			<prop key="hibernate.current_session_context_class">org.springframework.orm.hibernate4.SpringSessionContext</prop>
+    			 -->
+    			</props>
+    	</property>
+    </bean>
+    <bean id="transactionManager" class="org.springframework.orm.hibernate4.HibernateTransactionManager">
+    	<property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    
+    <bean id="baseDAO" class="dao.BaseDAO">
+    <property name="sessionFactory" ref="sessionFactory"></property>
+    </bean>
+    <bean id="usersDAO" class="dao.UsersDAOImpl" parent="baseDAO"></bean>
+    <bean id="clothesDAO" class="dao.ClothesDAOImpl" parent="baseDAO"></bean>
+    <bean id="outbounddetailsDAO" class="dao.OutbounddetailsDAOImpl" parent="baseDAO"></bean>
+    <bean id="warehousedetailsDAO" class="dao.WarehousedetailsDAOImpl" parent="baseDAO"></bean>
+    
+    <bean id="usersService" class="service.UsersServiceImpl">
+    	<property name="usersDAO" ref="usersDAO"></property>
+    </bean>
+     <bean id="clothesService" class="service.ClothesServiceImpl">
+    	<property name="clothesDAO" ref="clothesDAO"></property>
+    </bean>
+      <bean id="outbounddetailsService" class="service.OutbounddetailsServiceImpl">
+    	<property name="outbounddetailsDAO" ref="outbounddetailsDAO"></property>
+    </bean>
+      <bean id="warehousedetailsService" class="service.WarehousedetailsServiceImpl">
+    	<property name="warehousedetailsDAO" ref="warehousedetailsDAO"></property>
+    </bean>
+   
+    
+    <bean id="usersAction" class="action.UsersAction">
+    	<property name="usersService" ref="usersService"></property>
+    </bean>
+     <bean id="clothesAction" class="action.ClothesAction">
+    	<property name="clothesService" ref="clothesService"></property>
+    </bean>
+    <bean id="outbounddetailsAction" class="action.OutbounddetailsAction">
+    	<property name="outbounddetailsService" ref="outbounddetailsService"></property>
+    </bean>
+    <bean id="warehousedetailsAction" class="action.WarehousedetailsAction">
+    	<property name="warehousedetailsService" ref="warehousedetailsService"></property>
+    </bean>
+    
+</beans>
+

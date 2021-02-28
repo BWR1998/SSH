@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE struts PUBLIC
+	"-//Apache Software Foundation//DTD Struts Configuration 2.3//EN"
+	"http://struts.apache.org/dtds/struts-2.3.dtd">
+
+<struts>
+		<constant name="struts.objectFactory" value="spring" />
+		
+	   <package name="users" namespace="/users" extends="struts-default">
+	  	<action name="*_*" class="action.{1}Action" method="{2}">
+	    	<result name="login_success">/users/Users_login_success.jsp</result>
+	    	<result name="login_failure">/users/Users_login.jsp</result>
+	 	 </action>
+	</package>
+	   <package name="clothes" namespace="/clothes" extends="struts-default">
+	  	<action name="*_*" class="action.{1}Action" method="{2}">
+	    	<result name="query_success">/clothes/Clothes_query_success.jsp</result>
+	    	<result name="add_success">/clothes/Clothes_add_success.jsp</result>
+	    	<result name="delete_success" type="chain">Clothes_query </result>
+	 	 </action>
+	</package>
+	<package name="outbounddetails" namespace="/outbounddetails" extends="struts-default">
+	  	<action name="*_*" class="action.{1}Action" method="{2}">
+	    	<result name="query_success">/outbounddetails/Outbounddetails_query_success.jsp</result>
+	 	 </action>
+	</package>
+		<package name="warehousedetails" namespace="/warehousedetails" extends="struts-default">
+	  	<action name="*_*" class="action.{1}Action" method="{2}">
+	    	<result name="query_success">//warehousedetails//Warehousedetails_query_success.jsp</result>
+	 	 </action>
+	</package>
+</struts>
